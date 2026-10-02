@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <!-- Hard reload every 10 minutes to sync weather and prevent memory leaks -->
+  <meta http-equiv="refresh" content="600">
+  <title>Kindle Dashboard</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-font-smoothing: none; /* Keeps text crisp on E-ink */
+    }
+    body {
+      background-color: #ffffff;
+      color: #000000;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 30px 40px 15px 40px;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    
+    /* Top Section: Time & Date */
+    .top-section {
+      text-align: center;
+      padding-bottom: 24px;
+    }
+    .clock-container {
+      display: inline-block;
+      line-height: 1;
+    }
+    .time-digits {
+      font-size: 130px;
+      font-weight: 800;
+      letter-spacing: -2px;
+    }
+    .time-period {
+      font-size: 68px;
+      font-weight: 800;
+      margin-left: 10px;
+      vertical-align: baseline;
+    }
+    .date-display {
+      font-size: 26px;
+      font-weight: 500;
+      margin-top: 14px;
+      color: #111111;
+    }
+
+    /* Horizontal Divider */
+    hr {
+      border: 0;
+      border-top: 2px solid #000000;
+      margin: 0 0 28px 0;
+    }
+
+    /* Bottom Section: Weather */
+    .bottom-section {
+      display: table;
+      width: 100%;
+    }
+    .weather-left {
+      display: table-cell;
+      vertical-align: middle;
+      width: 50%;
+      text-align: left;
+    }
+    .location-title {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .weather-details {
+      font-size: 20px;
+      line-height: 1.35;
+      font-weight: 500;
+    }
+    .weather-right {
+      display: table-cell;
+      vertical-align: middle;
+      width: 50%;
+      text-align: right;
+    }
+    .temp-large {
+      font-size: 96px;
+      font-weight: 800;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 18px;
+      line-height: 1;
+    }
+    .icon-container {
+      display: inline-block;
+      vertical-align: middle;
+      width: 82px;
+      height: 82px;
+    }
+    .icon-container svg {
+      width: 100%;
+      height: 100%;
+      stroke: #000;
+      stroke-width: 2.5;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Footer: Timestamp & URL */
+    .footer {
+      position: absolute;
+      bottom: 12px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 13px;
+      color: #333333;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-section">
+    <div class="clock-container">
+      <span id="time" class="time-digits">--:--</span>
+      <span id="period" class="time-period">--</span>
+    </div>
+    <div id="date" class="date-display">Loading date...</div>
+  </div>
+
+  <hr>
+
+  <div class="bottom-section">
+    <div class="weather-left">
+      <div id="location" class="location-title">Barnet, UK: --°C</div>
+      <div id="condition" class="weather-details">Loading weather...</div>
+      <div id="subdetails" class="weather-details">Wind: -- km/h</div>
+    </div>
+    <div class="weather-right">
+      <div id="temp-display" class="temp-large">--°</div>
+      <div id="weather-icon" class="icon-container"></div>
+    </div>
+  </div>
+
+  <div id="footer" class="footer">Last Refreshed: --:--</div>
+
+  <script>
+    // Strict ES5 compatibility for Kindle WebKit engine
+    function updateClock() {
+      var now = new Date();
+      var hours = now.getHours();
+      var minutes = now.getMinutes();
+      var period = hours >= 12 ? 'PM' : 'AM';
+
+      hours = hours % 12;
+      hours = hours ? hours : 12; // 0 becomes 12
+      minutes = ('0' + minutes).slice(-2);
+
+      document.getElementById('time').innerHTML = hours + ':' + minutes;
+      document.getElementById('period').innerHTML = period;
+
+      var options = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' };
+      document.getElementById('date').innerHTML = now.toLocaleDateString('en-US', options);
+    }
+
+    // High-contrast SVG line icons for E-ink
+    var icons = {
+      sun: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41m14.14-14.14l-1.41 1.41"/></svg>',
+      cloud: '<svg viewBox="0 0 24 24"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>',
+      rain: '<svg viewBox="0 0 24 24"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M16 14v6m-8-6v6m-4-4v4m8-2v4"/></svg>'
+    };
+
+    function parseWmoCode(code) {
+      if (code === 0) return { desc: 'Clear sky', icon: icons.sun };
+      if (code >= 1 && code <= 3) return { desc: 'Partly cloudy', icon: icons.cloud };
+      if (code >= 45 && code <= 48) return { desc: 'Foggy', icon: icons.cloud };
+      if (code >= 51 && code <= 67) return { desc: 'Rain showers', icon: icons.rain };
+      if (code >= 80 && code <= 82) return { desc: 'Showers', icon: icons.rain };
+      return { desc: 'Cloudy', icon: icons.cloud };
+    }
+
+    function fetchWeather() {
+      // Coordinates for Barnet, UK
+      var lat = 51.65;
+      var lon = -0.20;
+      var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon + '&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m&timezone=auto';
+
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', url, true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          try {
+            var data = JSON.parse(xhr.responseText);
+            var current = data.current;
+            var temp = Math.round(current.temperature_2m);
+            var weatherInfo = parseWmoCode(current.weather_code);
+            var precip = current.precipitation;
+            var humidity = current.relative_humidity_2m;
+            var wind = Math.round(current.wind_speed_10m);
+
+            document.getElementById('location').innerHTML = 'Barnet, UK: ' + temp + '°C';
+            document.getElementById('condition').innerHTML = weatherInfo.desc + '. Precip: ' + precip + 'mm.';
+            document.getElementById('subdetails').innerHTML = 'Wind: ' + wind + ' km/h. Humidity: ' + humidity + '%.';
+            document.getElementById('temp-display').innerHTML = temp + '°';
+            document.getElementById('weather-icon').innerHTML = weatherInfo.icon;
+
+            var now = new Date();
+            var h = ('0' + now.getHours()).slice(-2);
+            var m = ('0' + now.getMinutes()).slice(-2);
+            document.getElementById('footer').innerHTML = 'Last Refreshed: ' + h + ':' + m;
+          } catch (e) {}
+        }
+      };
+      xhr.send();
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+    fetchWeather();
+  </script>
+</body>
+</html>
