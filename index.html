@@ -23,18 +23,18 @@
       -webkit-user-select: none;
     }
 
-    /* Fill full Kindle 7th Gen landscape rotated footprint */
+    /* Kindle 7th Gen rotated container scaled to 625px height */
     .rotate-wrapper {
       position: absolute;
       top: 0;
       left: 0;
       width: 730px;
-      height: 595px;
+      height: 625px;
       transform: rotate(-90deg) translateX(-100%);
       -webkit-transform: rotate(-90deg) translateX(-100%);
       transform-origin: top left;
       -webkit-transform-origin: top left;
-      padding: 16px 24px 10px 24px;
+      padding: 16px 24px 8px 24px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -64,7 +64,7 @@
     }
     .date-display {
       font-size: 26px;
-      font-weight: 600;
+      font-weight: 700;
       margin-top: 8px;
       color: #111111;
     }
@@ -99,7 +99,7 @@
     .weather-details {
       font-size: 20px;
       line-height: 1.35;
-      font-weight: 500;
+      font-weight: 700;
       white-space: nowrap;
     }
 
@@ -134,7 +134,7 @@
       stroke-linejoin: round;
     }
 
-    /* Bottom Section: Substantially taller 5-Day Forecast Strip */
+    /* Bottom Section: 5-Day Forecast Strip */
     .forecast-container {
       display: table;
       width: 100%;
@@ -174,22 +174,23 @@
     }
     .fc-temps {
       font-size: 19px;
-      font-weight: 700;
+      font-weight: 800;
       white-space: nowrap;
     }
     .fc-desc {
       font-size: 14px;
-      font-weight: 500;
+      font-weight: 700;
       margin-top: 4px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    /* Footer pinned to bottom */
+    /* Footer */
     .footer {
       text-align: center;
       font-size: 12px;
+      font-weight: 700;
       color: #333333;
       padding-bottom: 2px;
     }
