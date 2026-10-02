@@ -3,7 +3,6 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <!-- Hard reload every 10 minutes to sync weather and prevent memory leaks -->
   <meta http-equiv="refresh" content="600">
   <title>Kindle Dashboard</title>
   <style>
@@ -14,8 +13,8 @@
     html, body {
       margin: 0;
       padding: 0;
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
       overflow: hidden;
       background-color: #ffffff;
       color: #000000;
@@ -24,52 +23,57 @@
       -webkit-user-select: none;
     }
 
-    /* 90-degree counter-clockwise rotation wrapper */
+    /* Fixed rotation container mapped to the Kindle 7th Gen browser viewport */
     .rotate-wrapper {
       position: absolute;
       top: 0;
       left: 0;
+      /* Invert width/height to fill the rotated space edge-to-edge */
       width: 100vh;
       height: 100vw;
       transform: rotate(-90deg) translateX(-100%);
       -webkit-transform: rotate(-90deg) translateX(-100%);
       transform-origin: top left;
       -webkit-transform-origin: top left;
-      padding: 30px 40px 15px 40px;
+      padding: 24px 32px 10px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
     
     /* Top Section: Time & Date */
     .top-section {
       text-align: center;
-      padding-bottom: 24px;
+      width: 100%;
     }
     .clock-container {
       display: inline-block;
-      line-height: 1;
+      line-height: 0.95;
     }
     .time-digits {
-      font-size: 130px;
+      font-size: 165px;
       font-weight: 800;
-      letter-spacing: -2px;
+      letter-spacing: -3px;
     }
     .time-period {
-      font-size: 68px;
+      font-size: 78px;
       font-weight: 800;
-      margin-left: 10px;
+      margin-left: 8px;
       vertical-align: baseline;
     }
     .date-display {
-      font-size: 26px;
-      font-weight: 500;
-      margin-top: 14px;
+      font-size: 32px;
+      font-weight: 600;
+      margin-top: 12px;
       color: #111111;
     }
 
     /* Horizontal Divider */
     hr {
       border: 0;
-      border-top: 2px solid #000000;
-      margin: 0 0 28px 0;
+      border-top: 3px solid #000000;
+      margin: 16px 0 20px 0;
+      width: 100%;
     }
 
     /* Bottom Section: Weather */
@@ -80,27 +84,27 @@
     .weather-left {
       display: table-cell;
       vertical-align: middle;
-      width: 50%;
+      width: 55%;
       text-align: left;
     }
     .location-title {
-      font-size: 24px;
+      font-size: 30px;
       font-weight: 800;
       margin-bottom: 6px;
     }
     .weather-details {
-      font-size: 20px;
+      font-size: 24px;
       line-height: 1.35;
       font-weight: 500;
     }
     .weather-right {
       display: table-cell;
       vertical-align: middle;
-      width: 50%;
+      width: 45%;
       text-align: right;
     }
     .temp-large {
-      font-size: 96px;
+      font-size: 110px;
       font-weight: 800;
       display: inline-block;
       vertical-align: middle;
@@ -110,28 +114,25 @@
     .icon-container {
       display: inline-block;
       vertical-align: middle;
-      width: 82px;
-      height: 82px;
+      width: 95px;
+      height: 95px;
     }
     .icon-container svg {
       width: 100%;
       height: 100%;
       stroke: #000;
-      stroke-width: 2.5;
+      stroke-width: 2.4;
       fill: none;
       stroke-linecap: round;
       stroke-linejoin: round;
     }
 
-    /* Footer: Timestamp & URL */
+    /* Footer */
     .footer {
-      position: absolute;
-      bottom: 12px;
-      left: 0;
-      right: 0;
       text-align: center;
-      font-size: 13px;
+      font-size: 15px;
       color: #333333;
+      padding-bottom: 8px;
     }
   </style>
 </head>
