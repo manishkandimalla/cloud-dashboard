@@ -23,7 +23,7 @@
       -webkit-user-select: none;
     }
 
-    /* Target the Kindle 7th Gen portrait-to-landscape usable area directly */
+    /* Kindle 7th Gen rotated container */
     .rotate-wrapper {
       position: absolute;
       top: 0;
@@ -34,7 +34,10 @@
       -webkit-transform: rotate(-90deg) translateX(-100%);
       transform-origin: top left;
       -webkit-transform-origin: top left;
-      padding: 24px 28px 12px 28px;
+      padding: 16px 24px 8px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
     
     /* Top Section: Time & Date */
@@ -44,37 +47,37 @@
     }
     .clock-container {
       display: inline-block;
-      line-height: 0.95;
+      line-height: 0.9;
       white-space: nowrap;
     }
     .time-digits {
-      font-size: 155px;
+      font-size: 138px;
       font-weight: 800;
       letter-spacing: -3px;
     }
     .time-period {
-      font-size: 72px;
+      font-size: 64px;
       font-weight: 800;
       margin-left: 6px;
       vertical-align: baseline;
     }
     .date-display {
-      font-size: 30px;
+      font-size: 25px;
       font-weight: 600;
-      margin-top: 10px;
+      margin-top: 6px;
       color: #111111;
     }
 
-    /* Horizontal Divider */
+    /* Horizontal Dividers */
     hr {
       border: 0;
-      border-top: 3px solid #000000;
-      margin: 18px 0 22px 0;
+      border-top: 2px solid #000000;
+      margin: 10px 0;
       width: 100%;
     }
 
-    /* Bottom Section: Side-by-side weather blocks */
-    .bottom-section {
+    /* Middle Section: Current Weather */
+    .current-weather {
       width: 100%;
       display: table;
       table-layout: fixed;
@@ -86,14 +89,14 @@
       text-align: left;
     }
     .location-title {
-      font-size: 28px;
+      font-size: 26px;
       font-weight: 800;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       white-space: nowrap;
     }
     .weather-details {
-      font-size: 21px;
-      line-height: 1.35;
+      font-size: 18px;
+      line-height: 1.3;
       font-weight: 500;
       white-space: nowrap;
     }
@@ -106,44 +109,93 @@
       white-space: nowrap;
     }
     .temp-large {
-      font-size: 110px;
+      font-size: 88px;
       font-weight: 800;
       display: inline-block;
       vertical-align: middle;
       line-height: 1;
-      margin-right: 14px;
+      margin-right: 12px;
     }
     .icon-container {
       display: inline-block;
       vertical-align: middle;
-      width: 86px;
-      height: 86px;
+      width: 72px;
+      height: 72px;
     }
     .icon-container svg {
       width: 100%;
       height: 100%;
       stroke: #000;
-      stroke-width: 2.4;
+      stroke-width: 2.3;
       fill: none;
       stroke-linecap: round;
       stroke-linejoin: round;
     }
 
+    /* Bottom Section: 5-Day Forecast Strip */
+    .forecast-container {
+      display: table;
+      width: 100%;
+      table-layout: fixed;
+      border: 2px solid #000000;
+      border-radius: 4px;
+    }
+    .forecast-col {
+      display: table-cell;
+      text-align: center;
+      vertical-align: top;
+      padding: 8px 4px 6px 4px;
+      border-right: 1px solid #000000;
+    }
+    .forecast-col:last-child {
+      border-right: none;
+    }
+    .fc-day {
+      font-size: 19px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .fc-icon {
+      width: 42px;
+      height: 42px;
+      margin: 0 auto 4px auto;
+    }
+    .fc-icon svg {
+      width: 100%;
+      height: 100%;
+      stroke: #000;
+      stroke-width: 2.2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .fc-temps {
+      font-size: 17px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .fc-desc {
+      font-size: 12px;
+      font-weight: 500;
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
     /* Footer */
     .footer {
-      position: absolute;
-      bottom: 10px;
-      left: 0;
-      width: 730px;
       text-align: center;
-      font-size: 14px;
+      font-size: 12px;
       color: #333333;
+      margin-top: 4px;
     }
   </style>
 </head>
 <body>
 
   <div class="rotate-wrapper">
+    <!-- Time & Date -->
     <div class="top-section">
       <div class="clock-container">
         <span id="time" class="time-digits">--:--</span>
@@ -154,9 +206,10 @@
 
     <hr>
 
-    <div class="bottom-section">
+    <!-- Current Weather -->
+    <div class="current-weather">
       <div class="weather-left">
-        <div id="location" class="location-title">Barnet, UK: --°C</div>
+        <div id="location" class="location-title">Barnet, UK</div>
         <div id="condition" class="weather-details">Loading weather...</div>
         <div id="subdetails" class="weather-details">Wind: -- km/h · Humidity: --%</div>
       </div>
@@ -166,11 +219,17 @@
       </div>
     </div>
 
+    <!-- 5-Day Forecast Strip -->
+    <div id="forecast-strip" class="forecast-container">
+      <!-- Injected by JavaScript -->
+    </div>
+
     <div id="footer" class="footer">Last Refreshed: --:--</div>
   </div>
 
   <script>
     var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    var shortDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
     function isBritishSummerTime(d) {
@@ -214,17 +273,19 @@
 
     function parseWmoCode(code) {
       if (code === 0) return { desc: 'Clear sky', icon: icons.sun };
-      if (code >= 1 && code <= 3) return { desc: 'Partly cloudy', icon: icons.cloud };
+      if (code >= 1 && code <= 3) return { desc: 'Few clouds', icon: icons.cloud };
       if (code >= 45 && code <= 48) return { desc: 'Foggy', icon: icons.cloud };
-      if (code >= 51 && code <= 67) return { desc: 'Rain showers', icon: icons.rain };
-      if (code >= 80 && code <= 82) return { desc: 'Showers', icon: icons.rain };
-      return { desc: 'Cloudy', icon: icons.cloud };
+      if (code >= 51 && code <= 67) return { desc: 'Showers', icon: icons.rain };
+      if (code >= 80 && code <= 82) return { desc: 'Rain', icon: icons.rain };
+      return { desc: 'Overcast', icon: icons.cloud };
     }
 
     function fetchWeather() {
       var lat = 51.65;
       var lon = -0.20;
-      var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon + '&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m&timezone=auto';
+      var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon + 
+                '&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m' +
+                '&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto';
 
       var xhr = new XMLHttpRequest();
       xhr.open('GET', url, true);
@@ -232,6 +293,8 @@
         if (xhr.readyState === 4 && xhr.status === 200) {
           try {
             var data = JSON.parse(xhr.responseText);
+            
+            // Render Current Weather
             var current = data.current;
             var temp = Math.round(current.temperature_2m);
             var weatherInfo = parseWmoCode(current.weather_code);
@@ -239,11 +302,31 @@
             var humidity = current.relative_humidity_2m;
             var wind = Math.round(current.wind_speed_10m);
 
-            document.getElementById('location').innerHTML = 'Barnet, UK: ' + temp + '°C';
+            document.getElementById('location').innerHTML = 'Barnet, UK';
             document.getElementById('condition').innerHTML = weatherInfo.desc + ' · Precip: ' + precip + 'mm';
             document.getElementById('subdetails').innerHTML = 'Wind: ' + wind + ' km/h · Humidity: ' + humidity + '%';
             document.getElementById('temp-display').innerHTML = temp + '°';
             document.getElementById('weather-icon').innerHTML = weatherInfo.icon;
+
+            // Render 5-Day Forecast Strip
+            var daily = data.daily;
+            var forecastHtml = '';
+            for (var i = 0; i < 5; i++) {
+              var dateParts = daily.time[i].split('-');
+              var dayObj = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+              var dayTitle = i === 0 ? 'Today' : shortDays[dayObj.getDay()];
+              var dayInfo = parseWmoCode(daily.weather_code[i]);
+              var maxT = Math.round(daily.temperature_2m_max[i]);
+              var minT = Math.round(daily.temperature_2m_min[i]);
+
+              forecastHtml += '<div class="forecast-col">' +
+                '<div class="fc-day">' + dayTitle + '</div>' +
+                '<div class="fc-icon">' + dayInfo.icon + '</div>' +
+                '<div class="fc-temps">' + maxT + '° / ' + minT + '°</div>' +
+                '<div class="fc-desc">' + dayInfo.desc + '</div>' +
+              '</div>';
+            }
+            document.getElementById('forecast-strip').innerHTML = forecastHtml;
 
             var utcNow = new Date();
             var offset = isBritishSummerTime(utcNow) ? 1 : 0;
