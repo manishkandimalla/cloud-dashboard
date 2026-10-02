@@ -9,16 +9,33 @@
   <style>
     * {
       box-sizing: border-box;
-      -webkit-font-smoothing: none; /* Keeps text crisp on E-ink */
+      -webkit-font-smoothing: none;
     }
-    body {
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
       background-color: #ffffff;
       color: #000000;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-      margin: 0;
-      padding: 30px 40px 15px 40px;
       user-select: none;
       -webkit-user-select: none;
+    }
+
+    /* 90-degree counter-clockwise rotation wrapper */
+    .rotate-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vh;
+      height: 100vw;
+      transform: rotate(-90deg) translateX(-100%);
+      -webkit-transform: rotate(-90deg) translateX(-100%);
+      transform-origin: top left;
+      -webkit-transform-origin: top left;
+      padding: 30px 40px 15px 40px;
     }
     
     /* Top Section: Time & Date */
@@ -120,50 +137,69 @@
 </head>
 <body>
 
-  <div class="top-section">
-    <div class="clock-container">
-      <span id="time" class="time-digits">--:--</span>
-      <span id="period" class="time-period">--</span>
+  <div class="rotate-wrapper">
+    <div class="top-section">
+      <div class="clock-container">
+        <span id="time" class="time-digits">--:--</span>
+        <span id="period" class="time-period">--</span>
+      </div>
+      <div id="date" class="date-display">Loading date...</div>
     </div>
-    <div id="date" class="date-display">Loading date...</div>
+
+    <hr>
+
+    <div class="bottom-section">
+      <div class="weather-left">
+        <div id="location" class="location-title">Barnet, UK: --°C</div>
+        <div id="condition" class="weather-details">Loading weather...</div>
+        <div id="subdetails" class="weather-details">Wind: -- km/h</div>
+      </div>
+      <div class="weather-right">
+        <div id="temp-display" class="temp-large">--°</div>
+        <div id="weather-icon" class="icon-container"></div>
+      </div>
+    </div>
+
+    <div id="footer" class="footer">Last Refreshed: --:--</div>
   </div>
-
-  <hr>
-
-  <div class="bottom-section">
-    <div class="weather-left">
-      <div id="location" class="location-title">Barnet, UK: --°C</div>
-      <div id="condition" class="weather-details">Loading weather...</div>
-      <div id="subdetails" class="weather-details">Wind: -- km/h</div>
-    </div>
-    <div class="weather-right">
-      <div id="temp-display" class="temp-large">--°</div>
-      <div id="weather-icon" class="icon-container"></div>
-    </div>
-  </div>
-
-  <div id="footer" class="footer">Last Refreshed: --:--</div>
 
   <script>
-    // Strict ES5 compatibility for Kindle WebKit engine
+    var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+    function isBritishSummerTime(d) {
+      var year = d.getUTCFullYear();
+      var marchLast = new Date(Date.UTC(year, 2, 31));
+      var bstStart = new Date(Date.UTC(year, 2, 31 - marchLast.getUTCDay(), 1, 0, 0));
+      var octLast = new Date(Date.UTC(year, 9, 31));
+      var bstEnd = new Date(Date.UTC(year, 9, 31 - octLast.getUTCDay(), 1, 0, 0));
+      return d >= bstStart && d < bstEnd;
+    }
+
     function updateClock() {
-      var now = new Date();
-      var hours = now.getHours();
-      var minutes = now.getMinutes();
+      var utcNow = new Date();
+      var offsetHours = isBritishSummerTime(utcNow) ? 1 : 0;
+      var now = new Date(utcNow.getTime() + (offsetHours * 3600000));
+
+      var hours = now.getUTCHours();
+      var minutes = now.getUTCMinutes();
       var period = hours >= 12 ? 'PM' : 'AM';
 
       hours = hours % 12;
-      hours = hours ? hours : 12; // 0 becomes 12
+      hours = hours ? hours : 12;
       minutes = ('0' + minutes).slice(-2);
 
       document.getElementById('time').innerHTML = hours + ':' + minutes;
       document.getElementById('period').innerHTML = period;
 
-      var options = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' };
-      document.getElementById('date').innerHTML = now.toLocaleDateString('en-US', options);
+      var dayName = days[now.getUTCDay()];
+      var monthName = months[now.getUTCMonth()];
+      var dayNum = now.getUTCDate();
+      var fullYear = now.getUTCFullYear();
+
+      document.getElementById('date').innerHTML = dayName + ', ' + monthName + ' ' + dayNum + ', ' + fullYear;
     }
 
-    // High-contrast SVG line icons for E-ink
     var icons = {
       sun: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41m14.14-14.14l-1.41 1.41"/></svg>',
       cloud: '<svg viewBox="0 0 24 24"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>',
@@ -180,7 +216,6 @@
     }
 
     function fetchWeather() {
-      // Coordinates for Barnet, UK
       var lat = 51.65;
       var lon = -0.20;
       var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon + '&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m&timezone=auto';
@@ -204,9 +239,11 @@
             document.getElementById('temp-display').innerHTML = temp + '°';
             document.getElementById('weather-icon').innerHTML = weatherInfo.icon;
 
-            var now = new Date();
-            var h = ('0' + now.getHours()).slice(-2);
-            var m = ('0' + now.getMinutes()).slice(-2);
+            var utcNow = new Date();
+            var offset = isBritishSummerTime(utcNow) ? 1 : 0;
+            var localNow = new Date(utcNow.getTime() + (offset * 3600000));
+            var h = ('0' + localNow.getUTCHours()).slice(-2);
+            var m = ('0' + localNow.getUTCMinutes()).slice(-2);
             document.getElementById('footer').innerHTML = 'Last Refreshed: ' + h + ':' + m;
           } catch (e) {}
         }
