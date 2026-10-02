@@ -23,7 +23,7 @@
       -webkit-user-select: none;
     }
 
-    /* Kindle 7th Gen rotated container scaled to 600px height */
+    /* Target exact Kindle 7th Gen landscape rotated footprint */
     .rotate-wrapper {
       position: absolute;
       top: 0;
@@ -44,7 +44,6 @@
     .top-section {
       text-align: center;
       width: 100%;
-      padding-top: 4px;
     }
     .clock-container {
       display: inline-block;
@@ -52,12 +51,12 @@
       white-space: nowrap;
     }
     .time-digits {
-      font-size: 148px;
+      font-size: 142px;
       font-weight: 800;
-      letter-spacing: -4px;
+      letter-spacing: -3px;
     }
     .time-period {
-      font-size: 68px;
+      font-size: 66px;
       font-weight: 800;
       margin-left: 6px;
       vertical-align: baseline;
@@ -65,24 +64,24 @@
     .date-display {
       font-size: 26px;
       font-weight: 700;
-      margin-top: 8px;
-      color: #111111;
+      margin-top: 6px;
+      color: #000000;
     }
 
-    /* Horizontal Divider */
+    /* Horizontal Divider with breathing room */
     hr {
       border: 0;
       border-top: 2px solid #000000;
-      margin: 12px 0 10px 0;
+      margin: 14px 0 14px 0;
       width: 100%;
     }
 
-    /* Middle Section: Current Weather */
+    /* Middle Section: Current Weather with dedicated vertical margins */
     .current-weather {
       width: 100%;
       display: table;
       table-layout: fixed;
-      margin-bottom: 8px;
+      margin: 4px 0 14px 0;
     }
     .weather-left {
       display: table-cell;
@@ -91,13 +90,13 @@
       text-align: left;
     }
     .location-title {
-      font-size: 28px;
+      font-size: 27px;
       font-weight: 800;
       margin-bottom: 4px;
       white-space: nowrap;
     }
     .weather-details {
-      font-size: 20px;
+      font-size: 19px;
       line-height: 1.35;
       font-weight: 700;
       white-space: nowrap;
@@ -111,18 +110,18 @@
       white-space: nowrap;
     }
     .temp-large {
-      font-size: 96px;
+      font-size: 94px;
       font-weight: 800;
       display: inline-block;
       vertical-align: middle;
       line-height: 1;
-      margin-right: 14px;
+      margin-right: 12px;
     }
     .icon-container {
       display: inline-block;
       vertical-align: middle;
-      width: 80px;
-      height: 80px;
+      width: 78px;
+      height: 78px;
     }
     .icon-container svg {
       width: 100%;
@@ -141,27 +140,28 @@
       table-layout: fixed;
       border: 2px solid #000000;
       border-radius: 6px;
-      margin-bottom: 6px;
+      margin-top: 2px;
+      margin-bottom: 4px;
     }
     .forecast-col {
       display: table-cell;
       text-align: center;
       vertical-align: middle;
-      padding: 16px 4px 14px 4px;
+      padding: 14px 4px 12px 4px;
       border-right: 1px solid #000000;
     }
     .forecast-col:last-child {
       border-right: none;
     }
     .fc-day {
-      font-size: 22px;
+      font-size: 21px;
       font-weight: 800;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
     .fc-icon {
-      width: 50px;
-      height: 50px;
-      margin: 0 auto 8px auto;
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 6px auto;
     }
     .fc-icon svg {
       width: 100%;
@@ -178,7 +178,7 @@
       white-space: nowrap;
     }
     .fc-desc {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
       margin-top: 4px;
       white-space: nowrap;
@@ -186,12 +186,12 @@
       text-overflow: ellipsis;
     }
 
-    /* Footer */
+    /* Footer pinned to bottom */
     .footer {
       text-align: center;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 700;
-      color: #333333;
+      color: #111111;
       padding-bottom: 2px;
     }
   </style>
@@ -199,6 +199,7 @@
 <body>
 
   <div class="rotate-wrapper">
+    <!-- Top: Time & Date -->
     <div class="top-section">
       <div class="clock-container">
         <span id="time" class="time-digits">--:--</span>
@@ -209,6 +210,7 @@
 
     <hr>
 
+    <!-- Middle: Current Weather -->
     <div class="current-weather">
       <div class="weather-left">
         <div id="location" class="location-title">Barnet, UK</div>
@@ -221,6 +223,7 @@
       </div>
     </div>
 
+    <!-- Bottom: 5-Day Forecast Strip -->
     <div id="forecast-strip" class="forecast-container">
       <!-- Injected by JavaScript -->
     </div>
