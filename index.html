@@ -89,7 +89,7 @@
     .location-title {
       font-size: 32px;
       font-weight: 800;
-      margin-bottom: 1em; /* Adds a full 1-line gap before condition */
+      margin-bottom: 1em; /* 1-line gap before condition */
       white-space: nowrap;
     }
     .weather-details {
@@ -97,7 +97,7 @@
       line-height: 1.35;
       font-weight: 700;
       white-space: nowrap;
-      margin-bottom: 1em; /* Adds a full 1-line gap between each item */
+      margin-bottom: 1em; /* 1-line gap between items */
     }
     .weather-details:last-child {
       margin-bottom: 0;
@@ -109,6 +109,7 @@
       width: 38%;
       text-align: right;
       white-space: nowrap;
+      padding-right: 30px; /* Inward padding */
     }
     .temp-large {
       font-size: 115px;
@@ -223,11 +224,11 @@
     };
 
     function parseWmoCode(code) {
-      if (code === 0) return { desc: 'clear sky', icon: icons.sun };
-      if (code >= 1 && code <= 3) return { desc: 'few clouds', icon: icons.cloud };
-      if (code >= 45 && code <= 48) return { desc: 'foggy', icon: icons.cloud };
-      if (code >= 51 && code <= 67) return { desc: 'showers', icon: icons.rain };
-      if (code >= 80 && code <= 82) return { desc: 'rain', icon: icons.rain };
+      if (code === 0) return { desc: 'Clear Sky', icon: icons.sun };
+      if (code >= 1 && code <= 3) return { desc: 'Few Clouds', icon: icons.cloud };
+      if (code >= 45 && code <= 48) return { desc: 'Foggy', icon: icons.cloud };
+      if (code >= 51 && code <= 67) return { desc: 'Showers', icon: icons.rain };
+      if (code >= 80 && code <= 82) return { desc: 'Rain', icon: icons.rain };
       return { desc: 'overcast', icon: icons.cloud };
     }
 
@@ -252,9 +253,9 @@
 
             document.getElementById('location').innerHTML = 'Barnet, UK';
             document.getElementById('condition').innerHTML = weatherInfo.desc;
-            document.getElementById('precip').innerHTML = 'precip: ' + precip + 'mm';
-            document.getElementById('wind').innerHTML = 'wind: ' + wind + ' km/h';
-            document.getElementById('humidity').innerHTML = 'humidity: ' + humidity + '%';
+            document.getElementById('precip').innerHTML = 'Precip: ' + precip + 'mm';
+            document.getElementById('wind').innerHTML = 'Wind: ' + wind + ' km/h';
+            document.getElementById('humidity').innerHTML = 'Humidity: ' + humidity + '%';
             document.getElementById('temp-display').innerHTML = temp + '°';
             document.getElementById('weather-icon').innerHTML = weatherInfo.icon;
 
