@@ -111,6 +111,10 @@
       white-space: nowrap;
       padding-right: 45px;
     }
+    .temp-icon-row {
+      display: block;
+      white-space: nowrap;
+    }
     .temp-large {
       font-size: 115px;
       font-weight: 800;
@@ -133,6 +137,14 @@
       fill: none;
       stroke-linecap: round;
       stroke-linejoin: round;
+    }
+    .feels-like-text {
+      font-size: 24px;
+      line-height: 1.35;
+      font-weight: 700;
+      margin-top: 10px;
+      text-align: right;
+      white-space: nowrap;
     }
 
     /* Footer pinned cleanly at the bottom */
@@ -172,8 +184,11 @@
         <div id="humidity" class="weather-details">Humidity: --%</div>
       </div>
       <div class="weather-right">
-        <span id="temp-display" class="temp-large">--°</span>
-        <span id="weather-icon" class="icon-container"></span>
+        <div class="temp-icon-row">
+          <span id="temp-display" class="temp-large">--°</span>
+          <span id="weather-icon" class="icon-container"></span>
+        </div>
+        <div id="feels-like" class="feels-like-text">Feels like: --°</div>
       </div>
     </div>
 
@@ -233,12 +248,11 @@
     }
 
     function fetchWeather() {
-      // Precise coordinates for Barnet, London
       var lat = 51.65;
       var lon = -0.20;
-      // Explicitly queries the UK Met Office 2km seamless high-resolution model
+      // Requests actual temperature_2m and apparent_temperature (Feels like)
       var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon + 
-                '&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m' +
+                '&current=temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,weather_code,wind_speed_10m' +
                 '&models=ukmo_seamless&timezone=auto';
 
       var xhr = new XMLHttpRequest();
@@ -248,7 +262,8 @@
           try {
             var data = JSON.parse(xhr.responseText);
             var current = data.current;
-            var temp = Math.round(current.temperature_2m);
+            var actualTemp = Math.round(current.temperature_2m);
+            var feelsLikeTemp = Math.round(current.apparent_temperature);
             var weatherInfo = parseWmoCode(current.weather_code);
             var precip = current.precipitation;
             var humidity = current.relative_humidity_2m;
@@ -259,7 +274,8 @@
             document.getElementById('precip').innerHTML = 'Precip: ' + precip + 'mm';
             document.getElementById('wind').innerHTML = 'Wind: ' + wind + ' km/h';
             document.getElementById('humidity').innerHTML = 'Humidity: ' + humidity + '%';
-            document.getElementById('temp-display').innerHTML = temp + '°';
+            document.getElementById('temp-display').innerHTML = actualTemp + '°';
+            document.getElementById('feels-like').innerHTML = 'Feels like: ' + feelsLikeTemp + '°';
             document.getElementById('weather-icon').innerHTML = weatherInfo.icon;
 
             var utcNow = new Date();
