@@ -167,9 +167,9 @@
       <div class="weather-left">
         <div id="location" class="location-title">Barnet, UK</div>
         <div id="condition" class="weather-details">Loading...</div>
-        <div id="precip" class="weather-details">precip: --mm</div>
-        <div id="wind" class="weather-details">wind: -- km/h</div>
-        <div id="humidity" class="weather-details">humidity: --%</div>
+        <div id="precip" class="weather-details">Precip: --mm</div>
+        <div id="wind" class="weather-details">Wind: -- km/h</div>
+        <div id="humidity" class="weather-details">Humidity: --%</div>
       </div>
       <div class="weather-right">
         <span id="temp-display" class="temp-large">--°</span>
@@ -233,10 +233,13 @@
     }
 
     function fetchWeather() {
+      // Precise coordinates for Barnet, London
       var lat = 51.65;
       var lon = -0.20;
+      // Explicitly queries the UK Met Office 2km seamless high-resolution model
       var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon + 
-                '&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m&timezone=auto';
+                '&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m' +
+                '&models=ukmo_seamless&timezone=auto';
 
       var xhr = new XMLHttpRequest();
       xhr.open('GET', url, true);
