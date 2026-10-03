@@ -83,13 +83,13 @@
     .weather-left {
       display: table-cell;
       vertical-align: middle;
-      width: 62%;
+      width: 50%;
       text-align: left;
     }
     .location-title {
       font-size: 32px;
       font-weight: 800;
-      margin-bottom: 1em; /* 1-line gap before condition */
+      margin-bottom: 1em;
       white-space: nowrap;
     }
     .weather-details {
@@ -97,7 +97,7 @@
       line-height: 1.35;
       font-weight: 700;
       white-space: nowrap;
-      margin-bottom: 1em; /* 1-line gap between items */
+      margin-bottom: 1em;
     }
     .weather-details:last-child {
       margin-bottom: 0;
@@ -106,10 +106,10 @@
     .weather-right {
       display: table-cell;
       vertical-align: middle;
-      width: 38%;
+      width: 50%;
       text-align: right;
       white-space: nowrap;
-      padding-right: 30px; /* Inward padding */
+      padding-right: 45px;
     }
     .temp-large {
       font-size: 115px;
@@ -229,7 +229,7 @@
       if (code >= 45 && code <= 48) return { desc: 'Foggy', icon: icons.cloud };
       if (code >= 51 && code <= 67) return { desc: 'Showers', icon: icons.rain };
       if (code >= 80 && code <= 82) return { desc: 'Rain', icon: icons.rain };
-      return { desc: 'overcast', icon: icons.cloud };
+      return { desc: 'Overcast', icon: icons.cloud };
     }
 
     function fetchWeather() {
