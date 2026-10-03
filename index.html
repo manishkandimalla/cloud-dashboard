@@ -89,7 +89,7 @@
     .location-title {
       font-size: 32px;
       font-weight: 800;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
       white-space: nowrap;
     }
     .weather-details {
@@ -97,6 +97,10 @@
       line-height: 1.35;
       font-weight: 700;
       white-space: nowrap;
+      margin-bottom: 1em; /* Adds a full 1-line gap between each item */
+    }
+    .weather-details:last-child {
+      margin-bottom: 0;
     }
 
     .weather-right {
@@ -164,7 +168,7 @@
         <div id="condition" class="weather-details">Loading...</div>
         <div id="precip" class="weather-details">precip: --mm</div>
         <div id="wind" class="weather-details">wind: -- km/h</div>
-        <div id="humidity" class="weather-details">humidity --%</div>
+        <div id="humidity" class="weather-details">humidity: --%</div>
       </div>
       <div class="weather-right">
         <span id="temp-display" class="temp-large">--°</span>
