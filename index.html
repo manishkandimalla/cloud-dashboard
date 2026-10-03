@@ -23,7 +23,7 @@
       -webkit-user-select: none;
     }
 
-    /* Fixed rotation container scaled exactly to 715px width */
+    /* Fixed rotation container scaled to 715px width */
     .rotate-wrapper {
       position: absolute;
       top: 0;
@@ -34,14 +34,14 @@
       -webkit-transform: rotate(-90deg) translateX(-100%);
       transform-origin: top left;
       -webkit-transform-origin: top left;
-      padding: 24px 24px 16px 24px;
+      padding: 20px 24px 16px 24px;
     }
     
     /* Top Section: Time & Date */
     .top-section {
       text-align: center;
       width: 100%;
-      margin-top: 6px;
+      margin-top: 4px;
     }
     .clock-container {
       display: inline-block;
@@ -62,7 +62,7 @@
     .date-display {
       font-size: 30px;
       font-weight: 700;
-      margin-top: 12px;
+      margin-top: 10px;
       color: #000000;
     }
 
@@ -70,7 +70,7 @@
     hr {
       border: 0;
       border-top: 3px solid #000000;
-      margin: 28px 0 34px 0;
+      margin: 22px 0 24px 0;
       width: 100%;
     }
 
@@ -87,14 +87,14 @@
       text-align: left;
     }
     .location-title {
-      font-size: 34px;
+      font-size: 32px;
       font-weight: 800;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
       white-space: nowrap;
     }
     .weather-details {
-      font-size: 26px;
-      line-height: 1.45;
+      font-size: 24px;
+      line-height: 1.35;
       font-weight: 700;
       white-space: nowrap;
     }
@@ -130,7 +130,7 @@
       stroke-linejoin: round;
     }
 
-    /* Footer pinned cleanly at the bottom matching the 715px width */
+    /* Footer pinned cleanly at the bottom */
     .footer {
       position: absolute;
       bottom: 16px;
@@ -161,8 +161,10 @@
     <div class="current-weather">
       <div class="weather-left">
         <div id="location" class="location-title">Barnet, UK</div>
-        <div id="condition" class="weather-details">Loading weather...</div>
-        <div id="subdetails" class="weather-details">Wind: -- km/h · Humidity: --%</div>
+        <div id="condition" class="weather-details">Loading...</div>
+        <div id="precip" class="weather-details">precip: --mm</div>
+        <div id="wind" class="weather-details">wind: -- km/h</div>
+        <div id="humidity" class="weather-details">humidity --%</div>
       </div>
       <div class="weather-right">
         <span id="temp-display" class="temp-large">--°</span>
@@ -217,12 +219,12 @@
     };
 
     function parseWmoCode(code) {
-      if (code === 0) return { desc: 'Clear sky', icon: icons.sun };
-      if (code >= 1 && code <= 3) return { desc: 'Few clouds', icon: icons.cloud };
-      if (code >= 45 && code <= 48) return { desc: 'Foggy', icon: icons.cloud };
-      if (code >= 51 && code <= 67) return { desc: 'Showers', icon: icons.rain };
-      if (code >= 80 && code <= 82) return { desc: 'Rain', icon: icons.rain };
-      return { desc: 'Overcast', icon: icons.cloud };
+      if (code === 0) return { desc: 'clear sky', icon: icons.sun };
+      if (code >= 1 && code <= 3) return { desc: 'few clouds', icon: icons.cloud };
+      if (code >= 45 && code <= 48) return { desc: 'foggy', icon: icons.cloud };
+      if (code >= 51 && code <= 67) return { desc: 'showers', icon: icons.rain };
+      if (code >= 80 && code <= 82) return { desc: 'rain', icon: icons.rain };
+      return { desc: 'overcast', icon: icons.cloud };
     }
 
     function fetchWeather() {
@@ -245,8 +247,10 @@
             var wind = Math.round(current.wind_speed_10m);
 
             document.getElementById('location').innerHTML = 'Barnet, UK';
-            document.getElementById('condition').innerHTML = weatherInfo.desc + ' · Precip: ' + precip + 'mm';
-            document.getElementById('subdetails').innerHTML = 'Wind: ' + wind + ' km/h · Humidity: ' + humidity + '%';
+            document.getElementById('condition').innerHTML = weatherInfo.desc;
+            document.getElementById('precip').innerHTML = 'precip:' + precip + 'mm';
+            document.getElementById('wind').innerHTML = 'wind:' + wind + ' km/h';
+            document.getElementById('humidity').innerHTML = 'humidity ' + humidity + '%';
             document.getElementById('temp-display').innerHTML = temp + '°';
             document.getElementById('weather-icon').innerHTML = weatherInfo.icon;
 
