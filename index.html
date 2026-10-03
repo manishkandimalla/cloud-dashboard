@@ -111,6 +111,10 @@
       white-space: nowrap;
       padding-right: 45px;
     }
+    .weather-right-inner {
+      display: inline-block;
+      text-align: center; /* Centers "Feels Like" directly beneath the temp & icon cluster */
+    }
     .temp-icon-row {
       display: block;
       white-space: nowrap;
@@ -143,7 +147,6 @@
       line-height: 1.35;
       font-weight: 700;
       margin-top: 10px;
-      text-align: right;
       white-space: nowrap;
     }
 
@@ -184,11 +187,13 @@
         <div id="humidity" class="weather-details">Humidity: --%</div>
       </div>
       <div class="weather-right">
-        <div class="temp-icon-row">
-          <span id="temp-display" class="temp-large">--°</span>
-          <span id="weather-icon" class="icon-container"></span>
+        <div class="weather-right-inner">
+          <div class="temp-icon-row">
+            <span id="temp-display" class="temp-large">--°</span>
+            <span id="weather-icon" class="icon-container"></span>
+          </div>
+          <div id="feels-like" class="feels-like-text">Feels Like: --°</div>
         </div>
-        <div id="feels-like" class="feels-like-text">Feels like: --°</div>
       </div>
     </div>
 
@@ -250,7 +255,6 @@
     function fetchWeather() {
       var lat = 51.65;
       var lon = -0.20;
-      // Requests actual temperature_2m and apparent_temperature (Feels like)
       var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon + 
                 '&current=temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,weather_code,wind_speed_10m' +
                 '&models=ukmo_seamless&timezone=auto';
@@ -275,7 +279,7 @@
             document.getElementById('wind').innerHTML = 'Wind: ' + wind + ' km/h';
             document.getElementById('humidity').innerHTML = 'Humidity: ' + humidity + '%';
             document.getElementById('temp-display').innerHTML = actualTemp + '°';
-            document.getElementById('feels-like').innerHTML = 'Feels like: ' + feelsLikeTemp + '°';
+            document.getElementById('feels-like').innerHTML = 'Feels Like: ' + feelsLikeTemp + '°';
             document.getElementById('weather-icon').innerHTML = weatherInfo.icon;
 
             var utcNow = new Date();
