@@ -23,7 +23,7 @@
       -webkit-user-select: none;
     }
 
-    /* Fixed rotation container mapped to the Kindle 7th Gen browser viewport */
+    /* Fixed rotation container scaled exactly to 715px width */
     .rotate-wrapper {
       position: absolute;
       top: 0;
@@ -34,56 +34,47 @@
       -webkit-transform: rotate(-90deg) translateX(-100%);
       transform-origin: top left;
       -webkit-transform-origin: top left;
-      padding: 10px 24px 6px 24px;
+      padding: 24px 24px 16px 24px;
     }
     
     /* Top Section: Time & Date */
     .top-section {
       text-align: center;
       width: 100%;
+      margin-top: 6px;
     }
     .clock-container {
       display: inline-block;
-      line-height: 0.9;
+      line-height: 0.92;
       white-space: nowrap;
     }
     .time-digits {
-      font-size: 130px;
+      font-size: 155px;
       font-weight: 800;
       letter-spacing: -3px;
     }
     .time-period {
-      font-size: 60px;
+      font-size: 72px;
       font-weight: 800;
-      margin-left: 6px;
+      margin-left: 8px;
       vertical-align: baseline;
     }
     .date-display {
-      font-size: 48px;
+      font-size: 30px;
       font-weight: 700;
-      margin-top: 4px;
+      margin-top: 12px;
       color: #000000;
     }
 
     /* Horizontal Divider */
     hr {
       border: 0;
-      border-top: 2px solid #000000;
-      margin: 0;
+      border-top: 3px solid #000000;
+      margin: 28px 0 34px 0;
       width: 100%;
     }
 
-    /* Dedicated rigid spacers that Kindle cannot collapse */
-    .spacer-top {
-      height: 48px;
-      width: 100%;
-    }
-    .spacer-bottom {
-      height: 40px;
-      width: 100%;
-    }
-
-    /* Middle Section: Current Weather */
+    /* Weather Section */
     .current-weather {
       width: 100%;
       display: table;
@@ -92,18 +83,18 @@
     .weather-left {
       display: table-cell;
       vertical-align: middle;
-      width: 58%;
+      width: 62%;
       text-align: left;
     }
     .location-title {
-      font-size: 26px;
+      font-size: 34px;
       font-weight: 800;
-      margin-bottom: 4px;
+      margin-bottom: 12px;
       white-space: nowrap;
     }
     .weather-details {
-      font-size: 19px;
-      line-height: 1.35;
+      font-size: 26px;
+      line-height: 1.45;
       font-weight: 700;
       white-space: nowrap;
     }
@@ -111,92 +102,44 @@
     .weather-right {
       display: table-cell;
       vertical-align: middle;
-      width: 42%;
+      width: 38%;
       text-align: right;
       white-space: nowrap;
     }
     .temp-large {
-      font-size: 88px;
+      font-size: 115px;
       font-weight: 800;
       display: inline-block;
       vertical-align: middle;
       line-height: 1;
-      margin-right: 12px;
+      margin-right: 14px;
     }
     .icon-container {
       display: inline-block;
       vertical-align: middle;
-      width: 74px;
-      height: 74px;
+      width: 90px;
+      height: 90px;
     }
     .icon-container svg {
       width: 100%;
       height: 100%;
       stroke: #000;
-      stroke-width: 2.3;
+      stroke-width: 2.4;
       fill: none;
       stroke-linecap: round;
       stroke-linejoin: round;
     }
 
-    /* Bottom Section: 5-Day Forecast Strip */
-    .forecast-container {
-      display: table;
-      width: 100%;
-      table-layout: fixed;
-      border: 2px solid #000000;
-      border-radius: 6px;
-    }
-    .forecast-col {
-      display: table-cell;
-      text-align: center;
-      vertical-align: middle;
-      padding: 10px 4px 8px 4px;
-      border-right: 1px solid #000000;
-    }
-    .forecast-col:last-child {
-      border-right: none;
-    }
-    .fc-day {
-      font-size: 19px;
-      font-weight: 800;
-      margin-bottom: 4px;
-    }
-    .fc-icon {
-      width: 42px;
-      height: 42px;
-      margin: 0 auto 4px auto;
-    }
-    .fc-icon svg {
-      width: 100%;
-      height: 100%;
-      stroke: #000;
-      stroke-width: 2.2;
-      fill: none;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-    .fc-temps {
-      font-size: 17px;
-      font-weight: 800;
-      white-space: nowrap;
-    }
-    .fc-desc {
-      font-size: 12px;
-      font-weight: 700;
-      margin-top: 3px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    /* Footer pinned to bottom */
+    /* Footer pinned cleanly at the bottom matching the 715px width */
     .footer {
+      position: absolute;
+      bottom: 16px;
+      left: 0;
+      width: 715px;
       text-align: center;
-      font-size: 12px;
+      font-size: 14px;
       font-weight: 700;
       color: #111111;
-      margin-top: 6px;
     }
   </style>
 </head>
@@ -212,15 +155,9 @@
       <div id="date" class="date-display">Loading date...</div>
     </div>
 
-    <!-- Rigid Spacer 1 -->
-    <div class="spacer-top"></div>
-
     <hr>
 
-    <!-- Rigid Spacer 2 -->
-    <div class="spacer-top"></div>
-
-    <!-- Middle: Current Weather -->
+    <!-- Bottom: Current Weather -->
     <div class="current-weather">
       <div class="weather-left">
         <div id="location" class="location-title">Barnet, UK</div>
@@ -233,20 +170,11 @@
       </div>
     </div>
 
-    <!-- Rigid Spacer 3 -->
-    <div class="spacer-bottom"></div>
-
-    <!-- Bottom: 5-Day Forecast Strip -->
-    <div id="forecast-strip" class="forecast-container">
-      <!-- Injected by JavaScript -->
-    </div>
-
     <div id="footer" class="footer">Last Refreshed: --:--</div>
   </div>
 
   <script>
     var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    var shortDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
     function isBritishSummerTime(d) {
@@ -301,8 +229,7 @@
       var lat = 51.65;
       var lon = -0.20;
       var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon + 
-                '&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m' +
-                '&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto';
+                '&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m&timezone=auto';
 
       var xhr = new XMLHttpRequest();
       xhr.open('GET', url, true);
@@ -310,7 +237,6 @@
         if (xhr.readyState === 4 && xhr.status === 200) {
           try {
             var data = JSON.parse(xhr.responseText);
-            
             var current = data.current;
             var temp = Math.round(current.temperature_2m);
             var weatherInfo = parseWmoCode(current.weather_code);
@@ -323,25 +249,6 @@
             document.getElementById('subdetails').innerHTML = 'Wind: ' + wind + ' km/h · Humidity: ' + humidity + '%';
             document.getElementById('temp-display').innerHTML = temp + '°';
             document.getElementById('weather-icon').innerHTML = weatherInfo.icon;
-
-            var daily = data.daily;
-            var forecastHtml = '';
-            for (var i = 0; i < 5; i++) {
-              var dateParts = daily.time[i].split('-');
-              var dayObj = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
-              var dayTitle = i === 0 ? 'Today' : shortDays[dayObj.getDay()];
-              var dayInfo = parseWmoCode(daily.weather_code[i]);
-              var maxT = Math.round(daily.temperature_2m_max[i]);
-              var minT = Math.round(daily.temperature_2m_min[i]);
-
-              forecastHtml += '<div class="forecast-col">' +
-                '<div class="fc-day">' + dayTitle + '</div>' +
-                '<div class="fc-icon">' + dayInfo.icon + '</div>' +
-                '<div class="fc-temps">' + maxT + '° / ' + minT + '°</div>' +
-                '<div class="fc-desc">' + dayInfo.desc + '</div>' +
-              '</div>';
-            }
-            document.getElementById('forecast-strip').innerHTML = forecastHtml;
 
             var utcNow = new Date();
             var offset = isBritishSummerTime(utcNow) ? 1 : 0;
